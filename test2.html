@@ -12,6 +12,7 @@
 <SCRIPT LANGUAGE="JavaScript">
 function updateParent() {
     //console.log(opener.document.getElementById("bb").innerHTML);
+    alert(window.opener.document.getElementById("bb").innerHTML);
     opener.document.getElementById("bb").innerHTML = "234";
     //opener.document.parentForm.pf2.value = document.childForm.cf2.value;
     self.close();
