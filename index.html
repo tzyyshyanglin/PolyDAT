@@ -71,12 +71,19 @@
         </style>
 
     </head>
+    <script>
+      function newWindow() {
+        window.open("test2.html","_blank");
+      }
+    </script>
 
     <body>
 
       <div id="container">
         <div id='editor_holder'></div>
         <button id="submit">Get JSON form</button>
+        <button id="b1" onclick="newWindow()">Get JSON form</button>
+        <div id="bb">123</div>
         <div id="json_show_container">
           <textarea id="json_show" rows=20></textarea>
         </div>
