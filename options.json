@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "BigSMILES": {
+            "size": 20,
+            "title": "BigSMILES",
+            "helper": "Please enter BigSMILES string.",
+            "placeholder": "$CCCCC$"
+        },
+        "id" : {
+            "title": "Document ID"
+        },
+        "log" : {
+            "title": "Document Log",
+            "fields" : {
+              "msg" : {
+                  "type": "textarea",
+                  "rows": 5,
+                  "cols": 40,
+                  "helper": "Please be descriptive."
+              }
+            }
+        },
+
+
+        "ranking": {
+            "type": "select",
+            "helper": "Select your ranking.",
+            "optionLabels": ["Awesome!", "It's Ok", "Hmm..."]
+        }
+    }
+}

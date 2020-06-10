@@ -1,0 +1,778 @@
+{
+  "title":"BigSMILES Data Schema",
+  "description":"The schema for BigSMILES data object. Each object holds exactly the characterization of 1 polymer.",
+  "type":"object",
+  "properties": {
+    "BigSMILES" : {
+      "title" : "BigSMILES line notation for polymer",
+      "description": "The BigSMILES line notation for the polymer of interest.",
+      "type" : "string"
+    },
+    "id":{
+      "title" : "Id of the document",
+      "description": "Unique identifier for the document.",
+      "type" : "string"
+    },
+    "log": {
+      "title" : "Document Log",
+      "description": "The edit log for the data document.",
+      "type" : "array",
+      "items": {
+        "title": "Log Entry",
+        "description": "The object that contains the edit log of BigSMILES documents.",
+        "type" : "object",
+        "properties":{
+          "author_id":{
+            "title" : "Author list",
+            "description" : "the list of authors that contributed to the modifications",
+            "type" : "array",
+            "items": {
+              "description": "identifier strings such as ORCID",
+              "type":"string"
+            }
+          },
+          "date":{
+            "title" : "date of entry",
+            "description" : "the date of the entry, in yyyy-mm-dd format",
+            "type" : "string",
+            "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+          },
+          "msg" :{
+            "title" : "log message",
+            "description" : "the log message of the modifications made",
+            "type" : "string"
+          }
+        },
+        "required":["author_id","date","msg"]
+      }
+    },
+    "src": {
+      "title" : "Source of data",
+      "description": "The source of the data. Can be DOI or other unique document identifiers",
+      "type" : "string"
+    },
+
+    "data": {
+      "description": "A list of different measurements on the polymer and its precursors.",
+      "type" : "array",
+      "items": {
+        "title":"BigSMILES Data Object",
+        "description" : "The subschema/object that describes measurements on the polymer or one of its precursors.",
+        "type": "object",
+        "properties":{
+          "target":{
+            "description" : "the labelled BigSMILES string of the polymer/precursor that measurements were performed on",
+            "type" : "string"
+          },
+          "source":{
+            "description" : "the labelled BigSMILES string of the polymer of interest (the one that appears in the root).",
+            "type" : "string"
+          },
+
+          "D":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number" },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "Mn":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type":"number" },
+                "unit":{
+                  "type" : "string",
+                  "enum" : ["Da","kDa"]
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value","unit"]
+            }
+          },
+          "Mw":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type":"number" },
+                "unit":{
+                  "type" : "string",
+                  "enum" : ["Da","kDa"]
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value","unit"]
+            }
+          },
+          "Mz":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type":"number" },
+                "unit":{
+                  "type" : "string",
+                  "enum" : ["Da","kDa"]
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value","unit"]
+            }
+          },
+          "DPn":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number"},
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "DPw":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number"},
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "DPz":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number"},
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "skewness":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number"},
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "kurtosis":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number"},
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "MWD":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{
+                  "description" : "the relative probability densities at each specified molecular weight",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "mol_wt":{
+                  "description" : "the molecular weight with which the values are associated with",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "unit":{
+                  "type" : "string",
+                  "enum" : ["Da","kDa"]
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty for each of the entries in value",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value","mol_wt","unit"]
+            }
+          },
+          "GPC":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "I":{
+                  "description" : "measured intensities as an array",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "t":{
+                  "description" : "the retention time with which the intensities are associated with",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "unit_t":{
+                  "description": "unit for retention time",
+                  "type" : "string",
+                  "enum" : ["s","m"]
+                },
+                "calib":{
+                  "descriptions":"reference to calibration documentation",
+                  "type" : "string"
+                },
+                "unit_I":{
+                  "description": "unit for intensities",
+                  "type" : "string"
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty for each of the entries in I",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["I","t","unit_t","calib"]
+            }
+          },
+          "p":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number"},
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "comp":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "description" : "the list of the individual BigSMILES strings (or multiple instances wrapped within an array) of different repeat units",
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "description":"relative ratio of each element within the seq array",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          },
+          "comp_diad":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          },
+          "tacticity_diad":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "r":{
+                  "description" : "ratio of racemic diads",
+                  "type" : "number"
+                },
+                "m":{
+                  "description" : "ratio of meso diads",
+                  "type" : "number"
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["r","m"]
+            }
+          },
+          "tacticity_triad":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          },
+          "MSL":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "value":{ "type" : "number"},
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type": "number"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["value"]
+            }
+          },
+          "orient_diad":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          },
+          "orient_triad":{
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          }
+        },
+        "required": ["target","source"],
+        "patternProperties":{
+          "^comp_higher_[3-9]": {
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          },
+          "^tacticity_higher_[4-9]": {
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          },
+          "^orient_higher_[4-9]": {
+            "description" : "a list of different measurement results for the indicated observable",
+            "type" : "array",
+            "items":{
+              "description":"the object that holds individual results",
+              "type":"object",
+              "properties":{
+                "seq":{
+                  "type" : "array",
+                  "items": [
+                    { "type":"string" },
+                    {
+                      "type" :"array",
+                      "items":"string"
+                    }
+                  ]
+                },
+                "ratio":{
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type" : "array",
+                  "items": {"type":"number"}
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                }
+              },
+              "required":["seq","ratio"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["BigSMILES","log","src","id"]
+}

@@ -1,0 +1,494 @@
+var schema = {
+  "title":"BigSMILES Data Form",
+  "description":"The schema for BigSMILES data object. Each object holds exactly the characterization of 1 polymer.",
+  "type":"object",
+  "format": "categories",
+  "basicCategoryTitle": "Basic Document Info",
+  "properties": {
+    "BigSMILES" : {
+      "title" : "BigSMILES ",
+      "description": "The BigSMILES line notation for the polymer of interest.",
+      "type" : "string"
+    },
+    "id":{
+      "title" : "Document ID",
+      "description": "Unique identifier for the document.",
+      "type" : "string"
+    },
+    "src": {
+      "title" : "Source of data",
+      "description": "The source of the data. Can be DOI or other unique document identifiers",
+      "type" : "string"
+    },
+    "log": {
+      "title" : "Document Log",
+      "description": "The edit log for the data document.",
+      "type" : "array",
+      "format": "tabs",
+      "items": {
+        "title": "Log Entry",
+        "description": "The object that contains the edit log of BigSMILES documents.",
+        "type" : "object",
+        "properties":{
+          "author_id":{
+            "title" : "Author list",
+            "description" : "the list of author indices (unique identifier strings such as ORCID) that contributed to the modification",
+            "type" : "array",
+            "format": "table",
+            "items": {
+              "title" : "Author",
+              "type":"string"
+            }
+          },
+          "date":{
+            "title" : "Date of entry",
+            "description" : "the date of the entry, in mm/dd/yyyy format",
+            "type" : "string",
+            "format" : "date"
+          },
+          "msg" :{
+            "title" : "Log message",
+            "description" : "the log message of the modifications made",
+            "type" : "string",
+            "format" : "textarea"
+          }
+        },
+        "required":["author_id","date","msg"]
+      }
+    },
+    "data": {
+      "title" : "Precursor Properties",
+      "description": "A list of different measurements on the polymer and its precursors.",
+      "type" : "array",
+      "format": "tabs",
+      "items" : {
+        "title":"Precursor",
+        "description" : "The subschema/object that describes measurements on the polymer or one of its precursors.",
+        "type": "object",
+        "format" : "categories",
+        "properties":{
+          "target":{
+            "title" : "Polymer Precursor Measured",
+            "description" : "the labelled BigSMILES string of the polymer/precursor that measurements were performed on",
+            "type" : "string"
+          },
+          "source":{
+            "title" : "Indexed BigSMILES String",
+            "description" : "the labelled BigSMILES string of the polymer of interest (the one that appears in the root).",
+            "type" : "string"
+          },
+
+          "D":{
+            "title" : "D",
+            "description" : "Dispersity",
+            "$ref" : "#/definitions/array_of_unitless_scalar"
+          },
+
+          "Mn":{
+            "title" : "Mn",
+            "description" : "Number average molecular weight",
+            "$ref" : "#/definitions/array_MW"
+          },
+
+          "Mw":{
+            "title" : "",
+            "description" : "Weight average molecular weight",
+            "$ref" : "#/definitions/array_MW"
+          },
+
+          "Mz":{
+            "title" : "Mz",
+            "description" : "Z average molecular weight",
+            "$ref" : "#/definitions/array_MW"
+          },
+
+          "DPn":{
+            "title" : "DPn",
+            "description" : "Number average degree of polymerization",
+            "$ref" : "#/definitions/array_of_unitless_scalar"
+          },
+
+          "DPw":{
+            "title" : "DPw",
+            "description" : "Weight average degree of polymerization",
+            "$ref" : "#/definitions/array_of_unitless_scalar"
+          },
+
+          "DPz":{
+            "title" : "DPz",
+            "description" : "Z average degree of polymerization",
+            "$ref" : "#/definitions/array_of_unitless_scalar"
+          },
+
+          "skewness":{
+            "title" : "Skewness",
+            "description" : "skewness of the molecular weight distribution",
+            "$ref" : "#/definitions/array_of_unitless_scalar"
+          },
+
+          "kurtosis":{
+            "title" : "Kurtosis",
+            "description" : "kurtosis of the molecular weight distribution",
+            "$ref" : "#/definitions/array_of_unitless_scalar"
+          },
+
+          "MWD":{
+            "type" : "array",
+            "description" : "Molecular weight distribution",
+            "format" : "tabs",
+            "items":{
+              "title" : "Data Point",
+              "type":"object",
+              "properties":{
+                "value":{
+                  "description" : "the relative probability densities at each specified molecular weight",
+                  "type" : "string"
+                },
+                "mol_wt":{
+                  "description" : "the molecular weight with which the values are associated with",
+                  "type" : "string"
+                },
+                "unit":{
+                  "description" : "unit of mol_wt",
+                  "type" : "string",
+                  "enum" : ["Da","kDa"]
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty for each of the entries in value",
+                  "type" : "string"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                },
+                "src":{
+                  "description":"source of the data",
+                  "type": "string"
+                }
+              },
+              "required":["value","mol_wt","unit"]
+            }
+          },
+
+          "GPC":{
+            "type" : "array",
+            "description" : "Measurement data for gel permeation chromatography",
+            "format" : "tabs",
+            "items":{
+              "title" : "Data Point",
+              "type":"object",
+              "properties":{
+                "I":{
+                  "description" : "the measured intensities",
+                  "type" : "string"
+                },
+                "t":{
+                  "description" : "the retention time with which the intensities are associated with",
+                  "type" : "string"
+                },
+                "unit_t":{
+                  "description" : "unit of retention time",
+                  "type" : "string",
+                  "enum" : ["s","m"]
+                },
+                "calib":{
+                  "descriptions":"reference to calibration documentation",
+                  "type" : "string"
+                },
+                "unit_I":{
+                  "description": "unit for intensities",
+                  "type" : "string"
+                },
+                "method":{
+                  "descriptions":"the method of the measurement",
+                  "type" : "string"
+                },
+                "uncertainty":{
+                  "description":"uncertainty for each of the entries in I",
+                  "type" : "string"
+                },
+                "uncertainty_src":{
+                  "description":"source of the uncertainty",
+                  "type": "string"
+                },
+                "src":{
+                  "description":"source of the data",
+                  "type": "string"
+                }
+              },
+              "required":["I","t","unit_t","calib"]
+            }
+          },
+
+          "Conversion":{
+            "$ref" : "#/definitions/array_of_unitless_scalar"
+          },
+
+          "Composition":{
+            "description" : "Composition of polymer characterized by the ratio of different repeat unit sequences (multi-ads).",
+            "$ref" : "#/definitions/comp"
+          },
+
+          "Tacticity":{
+            "description" : "Tacticity of polymer characterized by the ratio of different sequences (multi-ads).",
+            "$ref" : "#/definitions/tacticity"
+          },
+
+          "RegioSeq":{
+            "description" : "Regiosequence of polymer characterized by the ratio of different repeat unit sequences (multi-ads).",
+            "$ref" : "#/definitions/comp"
+          }
+
+        },
+        "required": ["source","target"]
+      }
+    }
+  },
+  "required": ["BigSMILES","id","log","src","data"],
+
+  "definitions" : {
+    "array_of_unitless_scalar" : {
+      "format" : "tabs",
+      "type" : "array",
+      "items":{
+        "title" : "Data Point",
+        "type":"object",
+        "properties":{
+          "value":{ "type" : "number" },
+          "method":{
+            "descriptions":"the method of the measurement",
+            "type" : "string"
+          },
+          "uncertainty":{
+            "description":"uncertainty of the measurement",
+            "type": "number"
+          },
+          "uncertainty_src":{
+            "description":"source of the uncertainty",
+            "type": "string"
+          },
+          "src":{
+            "description":"source of the data",
+            "type": "string"
+          }
+        },
+        "required":["value"]
+      }
+    },
+    "array_MW" : {
+      "format" : "tabs",
+      "type" : "array",
+      "items":{
+        "title" : "Data Point",
+        "type":"object",
+        "properties":{
+          "value":{ "type":"number" },
+          "unit":{
+            "type" : "string",
+            "enum" : ["Da","kDa"]
+          },
+          "method":{
+            "descriptions":"the method of the measurement",
+            "type" : "string"
+          },
+          "uncertainty":{
+            "description":"unit should match the unit for given value",
+            "type": "number"
+          },
+          "uncertainty_src":{
+            "description":"source of the uncertainty",
+            "type": "string"
+          },
+          "src":{
+            "description":"source of the data",
+            "type": "string"
+          }
+        },
+        "required":["value","unit"]
+      }
+    },
+    "comp" : {
+      "format" : "tabs",
+      "type" : "array",
+      "items":{
+        "title" : "Data Point",
+        "description" : "The composition of the polymer specified in multi-ads",
+        "type":"object",
+        "properties":{
+          "order" : {
+            "description" : "the length of the sequences (order of the multi-ads)",
+            "type" : "number"
+          },
+          "def_list":{
+            "title" : "definitions",
+            "description" : "Enter the definitions for the sequences used to specify the sequence",
+            "format" : "table",
+            "type" : "array",
+            "items": {
+              "title" : "Definition",
+              "type" : "object",
+              "properties" : {
+                "placeholder" : {"type":"string"},
+                "definition" : {"type":"string"}
+              },
+              "required" : ["placeholder","definition"]
+            }
+          },
+          "obj_list":{
+            "title" : "list of objects",
+            "format" : "tabs",
+            "description" : "Enter the quantitative characterization of different fragments",
+            "type" : "array",
+            "items": {
+              "title" : "Object",
+              "type" : "object",
+              "description" : "Specify the ratio of the fragment(s)",
+              "properties" : {
+                "seq" : {
+                  "description" : "the sequence of the fragment",
+                  "type" : [
+                    {"type":"string","title":"single seq"},
+                    {
+                      "type":"array",
+                      "format":"table",
+                      "title":"multiple seq",
+                      "items":{
+                        "title" :"seq",
+                        "type":"string"
+                      }
+                    }
+                  ]
+                },
+                "ratio":{
+                  "description":"relative ratio of each element within the seq array",
+                  "type":"number"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type":"number"
+                },
+                "Composition" : {
+                  "$ref" : "#/definitions/comp"
+                },
+                "Tacticity" : {
+                  "$ref" : "#/definitions/tacticity"
+                },
+                "RegioSeq" : {
+                  "$ref" : "#/definitions/comp"
+                }
+              },
+              "required" : ["seq","ratio"]
+            }
+          },
+
+          "method":{
+            "descriptions":"the method of the measurement",
+            "type" : "string"
+          },
+
+          "uncertainty_src":{
+            "description":"source of the uncertainty",
+            "type": "string"
+          },
+          "src":{
+            "description":"source of the data",
+            "type": "string"
+          }
+        },
+        "required" : ["order","def_list","obj_list"]
+      }
+    },
+    "tacticity" : {
+      "format" : "tabs",
+      "type" : "array",
+      "items":{
+        "title" : "Data Point",
+        "description" : "The composition of the polymer specified in multi-ads",
+        "type":"object",
+        "properties":{
+          "order" : {
+            "description" : "the length of the sequences (order of the multi-ads)",
+            "type" : "number"
+          },
+          "obj_list":{
+            "title" : "list of objects",
+            "format" : "tabs",
+            "description" : "Enter the quantitative characterization of different fragments",
+            "type" : "array",
+            "items": {
+              "title" : "Object",
+              "type" : "object",
+              "description" : "Specify the ratio of the fragment(s)",
+              "properties" : {
+                "seq" : {
+                  "description" : "the sequence of the fragment",
+                  "type" : [
+                    {"type":"string","title":"single seq"},
+                    {
+                      "type":"array",
+                      "format":"table",
+                      "title":"multiple seq",
+                      "items":{
+                        "title" :"seq",
+                        "type":"string"
+                      }
+                    }
+                  ]
+                },
+                "ratio":{
+                  "description":"relative ratio of each element within the seq array",
+                  "type":"number"
+                },
+                "uncertainty":{
+                  "description":"uncertainty of the measurement",
+                  "type":"number"
+                },
+                "Composition" : {
+                  "$ref" : "#/definitions/comp"
+                },
+                "Tacticity" : {
+                  "$ref" : "#/definitions/tacticity"
+                },
+                "RegioSeq" : {
+                  "$ref" : "#/definitions/comp"
+                }
+              },
+              "required" : ["seq","ratio"]
+            }
+          },
+
+          "method":{
+            "descriptions":"the method of the measurement",
+            "type" : "string"
+          },
+
+          "uncertainty_src":{
+            "description":"source of the uncertainty",
+            "type": "string"
+          },
+          "src":{
+            "description":"source of the data",
+            "type": "string"
+          }
+        },
+        "required" : ["order","obj_list"]
+      }
+    },
+    "test" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "child" : {
+          "$ref" : "#/definitions/test"
+        }
+      },
+      "required" : ["name"]
+    }
+  }
+}

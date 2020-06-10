@@ -1,0 +1,20 @@
+<HTML><HEAD></HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+function openChild(file,window) {
+    //childWindow=open(file,window,'resizable=no,width=200,height=400,status=yes, toolbar=yes, menubar=yes, location=yes,addressbar=yes');
+    //childWindow=open(file);
+    //if (childWindow.opener == null) childWindow.opener = self;
+    console.log('321');
+    self.close();
+    }
+</SCRIPT>
+
+<BODY>
+  <div id="bb">123</div>
+<FORM NAME="parentForm">
+<INPUT TYPE="button" VALUE="Open child"
+  onClick="openChild('test2.html')">
+<BR><INPUT NAME="pf1" TYPE="TEXT" VALUE="">
+<BR><INPUT NAME="pf2" TYPE="TEXT" VALUE="">
+</FORM>
+</BODY></HTML>
