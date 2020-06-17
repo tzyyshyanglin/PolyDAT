@@ -2,40 +2,56 @@
 
 <html>
     <head>
-
+        <meta charset="utf-8"/>
         <!-- jquery -->
-        <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.12.4.min.js"></script>-->
         <script src="jquery/jquery-3.4.1.min.js"></script>
-        <!-- bootstrap -->
-        <!--<link rel='stylesheet' href='http://cdn.jsdelivr.net/bootstrap/3.2.0/css/bootstrap.css'>-->
-        <!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
-        <!--<link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'>-->
         <!-- JSON editor -->
-        <!-- <script src="jsoneditor/jsoneditor-1.4.0-beta.0.min.js"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.3.5/dist/jsoneditor.min.js"></script>
-        <script src="schema/BigSMILES_DataForm_schema_production.json"></script>
+        <script src="jsoneditor/jsoneditor-1.3.5.min.js"></script>
         <!--<script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.3.5/dist/jsoneditor.min.js"></script>-->
+        <script src="schema/BigSMILES_DataForm_schema_production.js"></script>
         <!-- Compiled and minified CSS -->
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
 
         <style>
+          input{
+            width:150px;
+          }
+          table input {
+            width:150px;
+          }
           label {
             font-size: 18px;
+            margin-top:5px;
+          }
+          .newwin-button{
+
+          }
+          .bigsmiles-button {
+            margin-top:-5px;
+            margin-bottom:5px;
           }
           #speciesArray,#transArray {
             display: none;
           }
-          [data-schemapath='root.BigSMILES'] label {
-            font-size: 18px;
+          [data-schemapath='root.preamble.network'] input {
+            width:300px;
           }
-          [data-schemapath='root.id'] label {
-            font-size: 18px;
+          [data-schemapath='root.preamble.logs'] input {
+            width:300px;
           }
-          [data-schemapath='root.src'] label {
-            font-size: 18px;
+          [data-schemapath='root.preamble.srcs'] input {
+            width:300px;
           }
           .ui-state-active {
             background: #a4bfeb;
+          }
+          [data-schemapath$="substructure"] thead {
+            display:none;
+          }
+          [data-schemapath$="ratio"] thead {
+            display:none;
+          }
+          [data-schemapath$="network"] thead {
+            display:none;
           }
           [data-schemapath$="author_id"] thead {
             display:none;
@@ -46,34 +62,76 @@
           [data-schemapath='root'] h3 .ui-buttonset {
             display: none;
           }
-          #json_show_container{
-            display: none;
+          [data-schematype='table'] h3 {
+            margin-bottom:-10px;
+            color:black;
           }
-          #json_show {
-            padding: 15px;
-            margin-left: 30px;
-            margin-top: 20px;
-            margin-bottom: 100px;
-            position: relative;
-            width: 800px;
-            top:-50px;
+          .bigsmiles-link {
+            margin-top:-5px;
+            display:inline;
+            color:black;
+          }
+          #editor_holder{
+            border:none 2px;
+            margin-bottom:0px;
           }
           #container {
+            position: absolute;
+            top:10px;
+            left:10px;
             background: white;
             border:1px none;
             width:1200px;
             margin-bottom:150px;
           }
           #submit{
-            position: relative;
-            top:-50px;
+            position: absolute;
+            top:18px;
+            height:25px;
+            width:130px;
+            font-size:14px;
+            left:240px;
+          }
+          #copy{
+            position: absolute;
+            top:18px;
+            height:25px;
+            font-size:14px;
+            left:375px;
+            display:none;
+          }
+          #json_show_container{
+            position:absolute;
+            top:45px;
+            left:240px;
+            display: none;
+          }
+          #json_show {
+            position:absolute;
+            top:0px;
+            left:0px;
+            padding: 15px;
+            width: 800px;
           }
         </style>
 
     </head>
     <script>
-      function newWindow() {
-        window.open("test2.html","_blank");
+      function newWindow(target,editorType) {
+        var target = target;
+        $("#message_container").html(target);
+        let file;
+        var popup;
+        if(editorType === "SMARTS"){
+          file = 'SMARTS.html';
+          popup=open(file,window,'resizable=no,width=625,height=525,status=no, toolbar=no, menubar=no, location=no,addressbar=no');
+        }
+        else if(editorType === "BigSMILES") {
+          file = 'BigSMILES_Builder/BigSMILES_Builder.html';
+          popup=open(file,window,'resizable=no,width=1500,height=768,status=no, toolbar=no, menubar=no, location=no,addressbar=no');
+          //popup=open(file,window)
+        }
+
       }
     </script>
 
@@ -82,50 +140,20 @@
       <div id="container">
         <div id='editor_holder'></div>
         <button id="submit">Get JSON form</button>
-        <button id="b1" onclick="newWindow()">Get JSON form</button>
-        <div id="bb">135</div>
+        <button id="copy">Copy to Clipboard</button>
         <div id="json_show_container">
           <textarea id="json_show" rows=20></textarea>
         </div>
       </div> <!-- container -->
+      <div id="message_container" style="display:none;"></div>
 
       <script>
         //var schema;
 
-
         var editor;
         var species = [];
         var transformations = [];
-/*
-        $( "body" ).on("DOMNodeInserted",function( event ){
-          $("span:contains('Object Properties')").html("Select Property");
-          $("textarea").css('width','500px');
-          $("textarea").css('height','150px');
-          $("#json_show").css('width','800px');
-          $("#json_show").css('height','400px');
-
-          //$("data-schemapath='root'").children("h3").css('display','none');
-          //$("div[data-schemapath^='root.data']").find("span:contains('Select Property')").parent().css('display','inline-block');
-          //$("div[data-schemapath^='root']").find("span:contains('Select Property')").parent().parent().css('display','inline-block');
-
-        });
-*/
         schema = schema;
-        // initiate JSON editor
-        //JSONEditor.defaults.options.template = 'handlebars';
-        //JSONEditor.defaults.callbacks.template = {
-        //  "enumValueCB": (editor, e) => e.item.text.toLowerCase()
-        //};
-/*
-        JSONEditor.defaults.callbacks.template = {
-          "enumFilterCB": (editor, e) => {
-            if (e.item.text.toLowerCase() == 'red') return ""; // "red" is not allowed
-            return e.item.text;
-          },
-          "enumTitleCB": (editor, e) => e.item.text.toUpperCase(),
-          "enumValueCB": (editor, e) => e.item.text.toLowerCase()
-        };
-        */
         editor = new JSONEditor(document.getElementById('editor_holder'), {
           //...
           schema: schema,
@@ -144,14 +172,8 @@
           //iconlib : 'jqueryui'
           theme: 'jqueryui'
 
-          //remove_empty_properties:true,
-
-          //template:'hogan'
-          //iconlib: 'jqueryui '
-          //theme: 'foundation6'
-          //iconlib: "jqueryui"
-          //iconlib: "jqueryui"
         });
+
         const watcherCallback = function (path) {
           //console.log(`field with path: [${path}] changed to [${JSON.stringify(this.getEditor(path).getValue())}]`);
           // Do something
@@ -187,18 +209,9 @@
             //this.getEditor('root.species.species_list').setValue(species);
             //console.log(this.getEditor('root.transformation.0.ID').getValue());
           }
-          /*
-          else if (path=='root.species') {
-            var objArr = this.getEditor('root.species').getValue();
-            console.log(objArr);
-            for (var i=0;i<objArr.length;i++) {
-              var obj = objArr[i];
-
-              console.log(JSON.stringify(obj));
-              console.log(obj.contents.)
-            }
-
-          }*/
+          else {
+            //console.log(path);
+          }
 
         }
         for (let key in editor.editors) {
@@ -207,13 +220,116 @@
           }
         }
 
+        var observer = new MutationObserver(function(mutations){
+          mutation = $(mutations).first();
+          //console.log(mutation);
+          addedNode = mutation[0].addedNodes;
+          //console.log($(addedNode[0]));
 
-        //var log = editor.getEditor('root.log');
-        //var default_log = JSON.parse('[{"author_id": [""],"date": "","msg": ""}]');
-        //log.setValue(default_log);
-        //var data = editor.getEditor('root.data');
-        //var default_data = JSON.parse('[{"target": "","source": ""}]');
-        //data.setValue(default_data);
+          attr = $(addedNode[0]).attr("data-schemapath");
+          if(typeof attr !== typeof undefined){
+            path = attr;
+            let pathArr = path.split(".");
+            let parentPathArr = pathArr.slice(0,pathArr.length-1);
+            //console.log(parentPathArr.join("."));
+            if(parentPathArr[parentPathArr.length-1] === "contents"){
+              let queryTxt = "div[data-schemapath='"+path+".bigsmiles"+"']";
+              name = 'root['+pathArr.slice(1,pathArr.length).join('][')+'][bigsmiles]';
+              //console.log(name);
+              buttonTxt = '<div class="bigsmiles-button"><button class="newwin-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="newWindow(\''+name+'\',\'BigSMILES\')"><span class="ui-button-text">BigSMILES Molecular Editor</span></button></div>';
+              $(queryTxt).append(buttonTxt);
+              //console.log(queryTxt);
+            }
+          }
+
+
+        });
+        var config = {
+          attributes: false,
+          characterData: false,
+          childList: true,
+          subtree: true
+          //attributeOldValue: true,
+          //characterDataOldValue: true
+        };
+        observer.observe(document.documentElement, config);
+
+        let queryTxt = "div[data-schemapath='root.preamble.polymer']";
+        let buttonTxt = '<div class="bigsmiles-button"><button class="newwin-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="newWindow(\'root[preamble][polymer]\',\'BigSMILES\')"><span class="ui-button-text">BigSMILES Molecular Editor</span></button></div>';
+        $(queryTxt).append(buttonTxt);
+
+        // fire whenever the number of elements in a substructures array is modified
+        $( "body" ).on("mousedown keydown",".ui-button",function(event){
+          // catch by mousedown and keydown because click is not responsive
+          let buttonClicked = $(event.currentTarget);
+
+          // json-editor-btn-add
+          let pathArr; // path to the modified ratio array
+          let index = -1;
+          let add = false;
+          if(buttonClicked.hasClass("json-editor-btntype-add")){
+            // a new substructure is added
+            add = true;
+            pathArr = $(event.currentTarget).parent().parent().parent().attr("data-schemapath").split(".");
+          }
+          else if(buttonClicked.hasClass("json-editor-btntype-deletelast")){
+            // the last substructure removed
+            add = false;
+            pathArr = $(event.currentTarget).parent().parent().parent().attr("data-schemapath").split(".");
+            index = -1;
+          }
+          else if(buttonClicked.hasClass("json-editor-btntype-delete") && buttonClicked.hasClass("delete")){
+            // a specific substructure within the array deleted
+            add = false;
+            let tr = $(event.currentTarget).parent().parent().parent();
+            let td = $(event.currentTarget).parent().parent().parent().children()[0];
+            path2 = $(td).attr("data-schemapath").split("."); // path to the deleted item
+            index = parseInt(path2[path2.length-1]);
+            //console.log(path2.join("."));
+            pathArr = tr.parent().parent().parent().parent().attr("data-schemapath").split(".");
+          }
+
+
+          //console.log(pathArr)
+
+          if(typeof pathArr !== typeof undefined){
+            // the number of elements in the "substructures" array for a ratios characterization is modified
+            if(pathArr[pathArr.length-1] == "substructure"){
+              // execute if the element is pointing to data-schemapath=xx.yy.zz.....substructure
+              let pathToArray = pathArr.slice(0,pathArr.length-1).join(".");
+              // take care of the ratio values
+              let ratioVal = editor.getEditor(pathToArray+'.ratio').getValue();
+              let substructureVal = editor.getEditor(pathToArray+'.substructure').getValue();
+              if(add) {
+                ratioVal.push(0.0);
+                // force the substructure to update, or else the table is updated after this function is executed.
+                substructureVal.push("");
+                editor.getEditor(pathToArray+'.substructure').setValue(substructureVal);
+                // append additional link to SMARTS editor to the new element
+                let table = $("div[data-schemapath='"+pathToArray+'.substructure'+"']").find("table");
+                let name = pathArr;
+                name.push($(table).find("tbody tr").length-1);
+                name = 'root['+name.slice(1,name.length).join("][")+']';
+                let text = '<td><button class="newwin-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="newWindow(\''+name+'\',\'SMARTS\')"><span class="ui-button-text">Molecular Editor</span></button></td>';
+                $(table).find("tbody tr").last().append(text);
+              }
+              else {
+                ratioVal.splice(index,1);
+              }
+              editor.getEditor(pathToArray+'.ratio').setValue(ratioVal);
+            }
+
+          }
+
+        });
+
+        $( "body" ).on("click","#copy",function(event){
+          let copyText = $("#json_show")[0];
+          copyText.select();
+          copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+          document.execCommand("copy");
+          alert('JSON form copied!');
+        });
 
         $( "body" ).on("click","#submit",function( event ){
           //console.log(editor.getValue().stringify());
@@ -245,13 +361,21 @@
 
             console.log(typeof formattedJson);
             console.log(typeof JSONstr);
-            //var formattedJson = JSON.stringify(editor.getValue(), null, '  ');
             var trimmedJson = formattedJson;
             delete trimmedJson["speciesArray"];
             delete trimmedJson["transArray"];
             var JSONstr =  JSON.stringify(trimmedJson, null, '  ')
             $("#json_show").val(JSONstr);
-            $("#json_show_container").css('display','block');
+
+            if($("#json_show_container").css('display') === 'none'){
+              $("#submit").html('Hide JSON form');
+              $("#json_show_container").css('display','block');
+              $("#copy").css('display','block');
+            } else {
+              $("#submit").html('Get JSON form');
+              $("#json_show_container").css('display','none');
+              $("#copy").css('display','none');
+            }
 //          }
 //*/
 /*
@@ -260,24 +384,9 @@
           $("#json_show_container").css('display','block');
 */
         });
-        $( "body" ).on("click","#b1",function( event ){
-          openChildWin();
-        });
 
-/*
-        var watcherCallback = function(path) {
-          console.log("field with path: [" + path + "] changed to [" + JSON.stringify(this.getEditor(path).getValue()) + "]");
-          // Do something
-          //alert(path);
-          //console.log(path);
-        }
-        for (var key in editor.editors) {
-          if (editor.editors.hasOwnProperty(key) && key !== 'root') {
-            editor.watch(key, watcherCallback.bind(editor, key));
-          }
-        }
 
-*/
+
 
       </script>
     </body>
