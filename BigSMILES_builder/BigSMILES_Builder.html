@@ -334,10 +334,6 @@
 
           newElement.appendTo(divElement);
           neighArr = getStoObjEnd(match[2]+':'+match[3],jmeNumStr);
-          console.log(jmeNumStr);
-          console.log(neighArr);
-          console.log(match);
-          //alert(neighArr.length);
           newElement.find(".noEnds").html(String(neighArr.length));
           var neighIdx = [];
           for(var k=0;k<neighArr.length;k++){
@@ -345,12 +341,7 @@
             if(thisNeighIdx.length>0)
               neighIdx.push(smilesNumStr.indexOf(':'+thisNeighIdx[0]+']'));
           }
-          console.log(neighIdx);
-          //alert(sortWithIndices(neighIdx).sortIndices[0]);
           var neighOrder = sortWithIndices(neighIdx).sortIndices;
-          console.log(smilesNumStr);
-          console.log(neighIdx);
-          console.log(neighOrder);
           if(neighIdx.length == 0){
             newElement.find(".leftEndStr").html("connection to end group 1");
             newElement.find(".rightEndStr").html("end group 2");
