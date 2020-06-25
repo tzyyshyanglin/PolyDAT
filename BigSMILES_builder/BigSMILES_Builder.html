@@ -188,12 +188,13 @@
         //var startingStructure = "10 10 $ 10.30 -8.40 C 11.52 -7.70 C 12.73 -8.40 $ 13.94 -7.70 C 12.73 -9.80 C 11.52 -10.50 C 11.52 -11.90 C 12.73 -12.60 C 13.94 -11.90 C 13.94 -10.50 1 2 1 2 3 1 3 4 1 3 5 1 6 7 1 7 8 2 8 9 1 9 10 2 5 10 1 5 6 2";
       	//var startingStructure = "11 11 $ 8.61 -4.45 Z 9.83 -3.75 C 11.04 -4.45 (1 12.26 -3.75 C 11.04 -5.85 C 9.83 -6.55 C 9.83 -7.94 C 11.04 -8.64 C 12.26 -7.94 C 12.26 -6.55 )2 12.25 -5.15 1 2 1 2 3 1 3 4 1 3 5 1 6 7 1 7 8 2 8 9 1 9 10 2 5 10 1 5 6 2 3 11 1";
         //var startingStructure = "7 6 C 4.44 -3.32 C 5.25 -3.79 C 5.25 -5.19 C 6.46 -5.89 {Z} 7.68 -5.19 C 8.89 -5.89 C 10.10 -5.19 1 2 1 2 3 1 3 4 1 4 5 1 5 6 1 6 7 1";
-        var startingStructure = "2 1 {Z} 5.25 -3.79 < 5.25 -5.19 1 2 1";
+        //var startingStructure = "2 1 {Z} 5.25 -3.79 < 5.25 -5.19 1 2 1";
+        var startingStructure = "6 5 C 5.79 -4.44 C 4.98 -4.91 C 4.98 -6.31 C 6.19 -7.01 {Z} 7.40 -6.31 C 8.62 -7.01 1 2 1 2 3 1 3 4 1 4 5 1 5 6 1";
       	//Instantiate a new JSME:
       	//arguments: HTML id, width, height (must be string not number!)
        	jsmeApplet = new JSApplet.JSME("appletContainer", "515px", "440px", {
        		//optional parameters
-       		"options" : "number,noquery,hydrogens,multipart,autoez",
+       		"options" : "number,noquery,removehs,removehsc,nohydrogens,multipart,autoez",
        		"jme" : startingStructure
        	});
       	//One can mimic the JME Java applet access to simplify the adaptation of HTML and JavaScript code:
@@ -301,45 +302,6 @@
         $(svgItem).attr("width",width);
         $(svgItem).attr("height",height);
 
-        //console.log(Rect1);
-        //console.log(svgItem);
-        //let Rect2 = $(svgItem).children("g")[0].getBoundingClientRect();
-        //divElement.children(".PolymerSVG").append(divElement.children(".PolymerSVG").html());
-        //$(svgItem).children("g").first().attr("transform","scale(1) translate(-571)");
-        //$(svgItem).attr("viewBox","421 114 429 300");
-
-        //console.log(Rect2);
-
-        //$(svgItem).children("g").first().attr("transform","scale(0.01)");
-        //console.log($(svgItem).children("g")[0].getBoundingClientRect());
-        //$(svgItem).attr("viewBox","0 0 10000 10000")
-        //console.log($(svgItem)[0]);
-        // get bounding box
-        //let Rect1 = $(svgItem).children("g")[0].getBBox();
-        //let Rect2 = $(svgItem).children("g")[0].getBoundingClientRect();
-        //console.log(Rect2);
-        //$(svgItem).children("g").attr("transform","scale(0.05) translate(-8200)");
-        //let Rect3 = $(svgItem).children("g").attr("transform","translate(0)")[0].getBoundingClientRect();
-        //let transform = "scale(0.05) translate("+(-10000)+" "+(0)+")";
-        //console.log(Rect2);
-        //console.log(Rect3);
-        //$(svgItem).attr("viewPort","0 0 14220 9960")
-
-
-        //console.log(transform);
-        //$(svgItem).children("g").first().attr("transform",transform);
-        //console.log($(svgItem).children("g")[0].getBoundingClientRect());
-        //console.log()
-        //Rect = $(svgItem).children("g")[0].getBoundingClientRect();
-        //console.log(Rect.x);
-
-        //console.log($(svgItem).children("g")[0].getBoundingClientRect());
-        //console.log(typeof svgItem.children("g"));
-        //console.log(JSON.stringify($(svgItem)[0].querySelector("g")));
-        //console.log(svgItem.getBBox());
-
-
-
         // finally, re-export the unlabelled string to JSME
         jsmeApplet.readMolFile(molFileStr);
 
@@ -371,22 +333,39 @@
           newElement.find(".StoObjName").html(match[0]);
 
           newElement.appendTo(divElement);
-
           neighArr = getStoObjEnd(match[2]+':'+match[3],jmeNumStr);
+          console.log(jmeNumStr);
+          console.log(neighArr);
+          console.log(match);
           //alert(neighArr.length);
           newElement.find(".noEnds").html(String(neighArr.length));
           var neighIdx = [];
           for(var k=0;k<neighArr.length;k++){
-            neighIdx.push(smilesNumStr.indexOf(neighArr[k]));
+            let thisNeighIdx = neighArr[k].match(/[0-9]+/i);
+            if(thisNeighIdx.length>0)
+              neighIdx.push(smilesNumStr.indexOf(':'+thisNeighIdx[0]+']'));
           }
+          console.log(neighIdx);
           //alert(sortWithIndices(neighIdx).sortIndices[0]);
           var neighOrder = sortWithIndices(neighIdx).sortIndices;
-          if(neighIdx.length > 0)
+          console.log(smilesNumStr);
+          console.log(neighIdx);
+          console.log(neighOrder);
+          if(neighIdx.length == 0){
+            newElement.find(".leftEndStr").html("connection to end group 1");
+            newElement.find(".rightEndStr").html("end group 2");
+          } else if (neighIdx.length == 1){
+            let selfIdx = smilesNumStr.indexOf(match[1]);
+            if(neighIdx[0] > selfIdx) {
+              newElement.find(".rightEndStr").html("connection to "+neighArr[neighOrder[0]]);
+              newElement.find(".leftEndStr").html("the other connection ");
+            } else {
+              newElement.find(".leftEndStr").html("connection to "+neighArr[neighOrder[0]]);
+              newElement.find(".rightEndStr").html("the other connection ");
+            }
+          } else if(neighIdx.length > 1) {
             newElement.find(".leftEndStr").html("connection to "+neighArr[neighOrder[0]]);
-          if(neighIdx.length > 1)
             newElement.find(".rightEndStr").html("connection to "+neighArr[neighOrder[1]]);
-          else {
-            newElement.find(".rightEndStr").html("the other connection ");
           }
           /*
           if(neighIdx.length > 2){
