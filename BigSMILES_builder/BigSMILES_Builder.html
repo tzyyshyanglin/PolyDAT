@@ -406,8 +406,15 @@
         } else if($(this).html() == 'Render Indexed BigSMILES String') {
           isNum = true;
         }
-        var stringToShow = getBigSmilesObjStr(element,isNum);
-        stringToShow = escapeHTMLBrak(stringToShow,isNum);
+        var stringToShow = getBigSmilesObjStr(element,false);
+        stringToShow = escapeHTMLBrak(stringToShow,false);
+        if(isNum == true) {
+          stringToShow = matchAndReplace(/(\[?((Cl|Br|[BCNOSPFIcbnosp])H?[0-9+-]*)\]?)/ig,stringToShow,function(x,match){
+            //console.log(match);
+            //console.log(x);
+            return '['+ match[2] + ':' + x.toString() +']';
+          });
+        }
         $("#BigSmiles").val(stringToShow);
         $("#returnStr").css("display","block");
       });
