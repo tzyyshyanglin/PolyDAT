@@ -55,7 +55,7 @@ var schema = {
             "description": "The object that contains the edit log of BigSMILES documents.",
             "type" : "object",
             "properties":{
-              "author_id":{
+              "author":{
                 "title" : "Author list",
                 "description" : "the list of author indices (unique identifier strings such as ORCID) that contributed to the modification",
                 "type" : "array",
@@ -235,6 +235,11 @@ var schema = {
       "format" : "categories",
       "basicCategoryTitle": "Component Info",
       "properties" : {
+        "ID" : {
+          "title" : "ID",
+          "description" : "ID for the (sub)component.",
+          "type" : "string"
+        },
         "bigsmiles" : {
           "title" : "BigSMILES",
           "description" : "(Labelled) (Big)SMILES string of the component.",
@@ -256,7 +261,11 @@ var schema = {
         "units" : {
           "title" : "units",
           "description" : "any unit supported by the units ontology",
-          "type" : "string"
+          "type" : "string",
+          "enum" : ["UO_0000190","UO_0000013","UO_0000040","UO_0000022","UO_0000021","UO_0000009","UO_0000098","UO_0000099","UO_0000062","UO_0000063","UO_0000064"],
+          "options" : {
+            "enum_titles" : ["ratio","mole","mmol","mg","g","kg","mL","L","M","mM","uM"]
+          }
         },
 
         "characterization" :{
@@ -318,28 +327,15 @@ var schema = {
               "description" : "kurtosis",
               "$ref" : "#/definitions/scalar-obj-1"
             },
-            "GPC" : {
-              "title" : "GPC",
-              "description" : "raw gel permeation chromatography (GPC) data",
-
-              "$ref" : "#/definitions/vector-obj-gpc"
-
-            },
             "MWD" : {
               "title" : "MWD",
               "description" : "molecular weight distribution",
 
               "$ref" : "#/definitions/vector-obj-mwd"
-            },
-            "MALDI" : {
-              "title" : "MALDI",
-              "description" : "raw matrix-assisted laser desorption/ionization (MALDI) data",
-
-              "$ref" : "#/definitions/vector-obj-maldi"
             }
           },
           "options" : {
-            "display_required_only" : false,
+            "display_required_only" : true,
             "remove_empty_properties" : true
           }
         },
@@ -369,9 +365,10 @@ var schema = {
 
       },
       "options" :{
-        "display_required_only" : true
+        "display_required_only" : true,
+        "remove_empty_properties" : true
       },
-      "required" : ["bigsmiles","quantity","units","characterization"]
+      "required" : ["ID","bigsmiles","quantity","units","characterization"]
     },
     "ratio-obj" : {
       "title" : "Ratio",
@@ -407,7 +404,10 @@ var schema = {
 
         "unit" : {
           "type" : "string",
-          "enum" : ["molar","mass"]
+          "enum" : ["UO_0000013","UO_0000002"],
+          "options" : {
+            "enum_titles" : ["mole","mass"]
+          }
         },
         "src" : {
           "type" : "string",
@@ -444,7 +444,10 @@ var schema = {
           },
           "unit" : {
             "type" : "string",
-            "enum" : ["Da", "kDa"]
+            "enum" : ["UO_0000221","UO_0000222"],
+            "options" : {
+              "enum_titles" : ["Da","kDa"]
+            }
           },
           "src" : {
             "type" : "string",
@@ -484,7 +487,10 @@ var schema = {
           },
           "unit" : {
             "type" : "string",
-            "enum" : ["1"]
+            "enum" : ["UO_0000186"],
+            "options" : {
+              "enum_titles" : ["1"]
+            }
           },
           "src" : {
             "type" : "string",
@@ -510,62 +516,6 @@ var schema = {
         "options" :{
           "display_required_only" : false
         }
-      }
-    },
-    "vector-obj-gpc" : {
-      "type" : "array",
-      "format": "table",
-      "items" : {
-        "title" : "Measurement",
-        "type" : "object",
-        "properties" : {
-          "y-value" : {
-            "title" : "intensities",
-            "type" : "string",
-            "options" : {
-              "inputAttributes": {
-                "placeholder":  "comma-delimited list of numbers"
-              }
-            }
-          },
-          "x-value" : {
-            "title" : "retention time",
-            "type" : "string",
-            "options" : {
-              "inputAttributes": {
-                "placeholder":  "comma-delimited list of numbers"
-              }
-            }
-          },
-          "x-unit" : {
-            "title" : "time units",
-            "type" : "string",
-            "enum" : ["s","m"]
-          },
-          "src" : {
-            "type" : "string",
-            "watch" : {
-              "srcs" : "preamble.srcs"
-            },
-            "enumSource" : [{
-              "source" : "srcs",
-              "value" : "{{item.citeID}}"
-            }]
-          },
-          "method" : {
-            "type" : "string"
-          },
-          "uncertainty" : {
-            "type" : "string"
-          },
-          "uncertainty_src" : {
-            "type" : "string"
-          }
-        }
-      },
-      "required" :["x-value","y-value","x-unit"],
-      "options" :{
-        "display_required_only" : false
       }
     },
     "vector-obj-mwd" : {
@@ -596,61 +546,10 @@ var schema = {
           "x-unit" : {
             "title" : "mass units",
             "type" : "string",
-            "enum" : ["Da","kDa"]
-          },
-          "src" : {
-            "type" : "string",
-            "watch" : {
-              "srcs" : "preamble.srcs"
-            },
-            "enumSource" : [{
-              "source" : "srcs",
-              "value" : "{{item.citeID}}"
-            }]
-          },
-          "method" : {
-            "type" : "string"
-          },
-          "uncertainty" : {
-            "type" : "string"
-          },
-          "uncertainty_src" : {
-            "type" : "string"
-          }
-        }
-      },
-      "required" :["x-value","y-value","x-unit"],
-      "options" :{
-        "display_required_only" : false
-      }
-    },
-    "vector-obj-maldi" : {
-      "type" : "array",
-      "format": "table",
-      "items" : {
-        "title" : "Measurement",
-        "type" : "object",
-        "properties" : {
-          "y-value" : {
-            "title" : "intensities",
-            "type" : "string",
+            "enum" : ["UO_0000221","UO_0000222"],
             "options" : {
-              "inputAttributes": {
-                "placeholder":  "comma-delimited list of numbers"
-              }
+              "enum_titles" : ["Da","kDa"]
             }
-          },
-          "x-value" : {
-            "type" : "string",
-            "options" : {
-              "inputAttributes": {
-                "placeholder":  "comma-delimited list of numbers"
-              }
-            }
-          },
-          "x-unit" : {
-            "type" : "string",
-            "enum" : ["m/z"]
           },
           "src" : {
             "type" : "string",
