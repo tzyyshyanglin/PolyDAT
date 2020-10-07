@@ -444,9 +444,9 @@ var schema = {
           },
           "unit" : {
             "type" : "string",
-            "enum" : ["UO_0000221","UO_0000222"],
+            "enum" : ["UO_0000221","UO_0000222","UO_0000088","UO_0000087"],
             "options" : {
-              "enum_titles" : ["Da","kDa"]
+              "enum_titles" : ["Da","kDa","g/mol","kg/mol"]
             }
           },
           "src" : {
@@ -546,9 +546,9 @@ var schema = {
           "x-unit" : {
             "title" : "mass units",
             "type" : "string",
-            "enum" : ["UO_0000221","UO_0000222"],
+            "enum" : ["UO_0000221","UO_0000222","UO_0000088","UO_0000087"],
             "options" : {
-              "enum_titles" : ["Da","kDa"]
+              "enum_titles" : ["Da","kDa","g/mol","kg/mol"]
             }
           },
           "src" : {
